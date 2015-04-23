@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<title>Contact US!</title>
+<link href="http://fonts.googleapis.com/css?family=Oswald:400,300" rel="stylesheet" type="text/css" />
+<link href="other.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
+<?php
+// define variables and set to empty values
+$x = $nameErr = $emailErr = $msgErr = "";
+$name = $email = $msg="";
+if ($_SERVER["REQUEST_METHOD"] == "POST")
+{
+
+   if (empty($_POST["name"]))
+     {$nameErr = "Name is required";}
+   else
+     {$name = test_input($_POST["name"]);
+	 if (!preg_match("/^[a-zA-Z ]*$/",$name))
+       {
+       $nameErr = "Only letters and white space allowed"; 
+       }
+	
+	 }
+   
+   
+   
+   if (empty($_POST["message"]))
+     {$msgErr = "Message is required is required";}
+   else
+     {$msg = test_input($_POST["message"]);
+	  
+	 }
+	
+	
+	if (empty($_POST["email"]))
+	{
+	$emailErr = "Enter email";
+	}
+	else
+	{
+	$email = test_input($_POST["email"]);
+	}
+  
+	$x=send_data($name,$email,$msg);
+  }
+
+function test_input($data)
+{
+     $data = trim($data);
+     $data = stripslashes($data);
+     $data = htmlspecialchars($data);
+     return $data;
+}
+?>
+<div id="wrapper">
+	<div id="menu-wrapper">
+		<div id="menu" class="container">
+			<ul>
+				<li><a href="index.html">Home</a></li>
+				<li><a href="find.php">Find</a></li>
+				<li><a href="register.php">Register</a></li>
+				<li><a href="photo.html">Photos</a></li>
+				<li><a href="faq.html">FAQ</a></li>
+				
+				<li class="current_page_item"><a href="contactus.php">Contact Us</a></li>
+				<li><a href="signin.php">Sign in</a></li>
+			</ul>
+		</div>
+	</div>
+	<div id="header">
+		<div id="logo" class="container">
+			<form>
+			<fieldset>
+			<legend><h3>Contact Us</h3></legend>
+			<br><b>Helpline:</b><br><br>landline:<br>0231-2528676<br><br>Mobile:<br>+91-9579-02-1689<br>
+			</fieldset>
+			</form>
+			
+			<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+			<fieldset>
+			<legend><h3>Feedback</h3></legend>
+			Name:<span class="error">* <?php echo $nameErr;?></span><br><input type="text" name="name"><br>
+			email id:<span class="error">* <?php echo $emailErr;?></span><br><input type="text" name="email"><br>
+			Message:<span class="error">* <?php echo $msgErr;?></span><br>
+			<textarea name="message" value="" rows="4" cols="50">
+</textarea>
+			<br>
+</fieldset>
+<input type="submit" value="Submit">
+<span class="thank"><?php echo $x;?></span>
+</form>
+<?php
+function send_data($name,$email,$msg)
+{
+	mysql_connect('localhost', 'admin', 'admin') or die (mysql_error());
+mysql_select_db('blood_search') or die (mysql_error());
+
+if (mysqli_connect_errno())
+  {
+  echo "Failed to connect to MySQL: " . mysqli_connect_error();
+  }
+if($name!=NULL and $email!=NULL and $msg!=NULL)
+{
+mysql_query("INSERT INTO feedback (name,email,message)
+VALUES
+('$name','$email','$msg')");
+
+
+ return "THANK YOU!!!";
+}
+ }
+?>
+
+<br>
+
+		</div>
+	</div>
+	<div id="page" class="container">
+		
+		</div>
+		
+	</div>
+	<!-- end #page -->
+	
+</div>
+<div id="footer-content" class="container">
+	<div id="footer-bg">
+		<div id="column1">
+			<h2></h2>
+			<p>Copyright by KITCOEK</p>
+			<p>Developed by CSE dept</p>
+			<p>All rights reserved</p>
+		</div>
+		
+		<div id="column4">
+			<h2>Social</h2>
+			<ul class="list-style3">
+				<li class="first"><a href="http://www.twitter.com">Twitter</a></li>
+				<li><a href="http://www.facebook.com">Facebook</a></li>
+				<li><a href="http://www.google.com">Google +</a></li>
+				
+			</ul>
+		</div>
+	</div>
+</div>
+<!-- end #footer -->
+</body>
+</html>
